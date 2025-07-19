@@ -3,88 +3,167 @@
 @section('title', 'Jadwal Konseling')
 
 @section('content')
-<div class="container-fluid">
-    <div class="content-header">
-         <h1>Jadwal</h1>
-        @if (session('success'))
-             <div class="alert alert-success mt-2 alert-dismissible fade show" role="alert">
-                 {{ session('success') }}
-                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-             </div>
-         @endif
- 
-        @if (session('error'))
-             <div class="alert alert-danger mt-2 alert-dismissible fade show" role="alert">
-                 {{ session('error') }}
-                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-             </div>
-         @endif
-       
-     </div>
-     <div class="col-md-12">
-         <div class="main-content">
-             <div class="mt-4">
-                 <h4>Kalender Jadwal Konseling</h4>
-                 <div id='calendar'></div>
-             </div>
-         </div>
-     </div>
- </div>
- <div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-     <div class="modal-dialog modal-lg">
-         <div class="modal-content">
-             <div class="modal-header">
-                 <h1 class="modal-title fs-5" id="exampleModalLabel">Buat Jadwal</h1>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-             </div>
-             <form action="{{route('schedule.store')}}" method="POST" id="form-jadwal">
-                 @csrf
-                 <div class="modal-body">
-                     <div class="row">
-                         <div class="col-lg-4">
-                             <div class="form-group">
-                                 <label for="schedule_date">Tanggal Jadwal</label>
-                                 <input type="text" name="schedule_date" class="form-control" placeholder="Tanggal Jadwal" id="schedule_date" required>
-                             </div>
-                         </div>
-                         <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="schedule_time">Jam Jadwal</label>
-                                <input type="time" name="schedule_time" class="form-control" id="schedule_time" min="09:00" max="17:00" required>
-                                <small class="text-muted">Pilih waktu antara 09:00 - 17:00</small>
-                                
-                            </div>
-                        </div>
-                         <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="user_id">Guru BK</label>
-                                <select name="user_id" id="user_id" class="form-control" required>
-                                    <option value="">Pilih Guru BK</option>
-                                    @foreach ($users as $user)
-                                        <option value="{{$user->id}}">{{$user->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        
-                         <div class="col-lg-12 mt-2">
-                             <div class="form-group">
-                                 <label for="time_schedule">Keterangan</label>
-                                 <textarea name="ketarangan" class="form-control" id="ketarangan" placeholder="keterangan" rows="6"></textarea>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-                 <div class="modal-footer">
-                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                     <button type="submit" class="btn btn-primary">Save changes</button>
-                 </div>
-             </form>
+    @if(Auth::user()->hasRole('Siswa'))
+        <div class="container-fluid">
+            <div class="content-header">
+                <h1>Jadwal</h1>
+                @if (session('success'))
+                    <div class="alert alert-success mt-2 alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+        
+                @if (session('error'))
+                    <div class="alert alert-danger mt-2 alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
             
-         </div>
-     </div>
- </div>
- @include('schedule.detail')
+            </div>
+            <div class="col-md-12">
+                <div class="main-content">
+                    <div class="mt-4">
+                        <h4>Kalender Jadwal Konseling</h4>
+                        <div id='calendar'></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Buat Jadwal</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{route('schedule.store')}}" method="POST" id="form-jadwal">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="schedule_date">Tanggal Jadwal</label>
+                                        <input type="text" name="schedule_date" class="form-control" placeholder="Tanggal Jadwal" id="schedule_date" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="schedule_time">Jam Jadwal</label>
+                                        <input type="time" name="schedule_time" class="form-control" id="schedule_time" min="09:00" max="17:00" required>
+                                        <small class="text-muted">Pilih waktu antara 09:00 - 17:00</small>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="user_id">Guru BK</label>
+                                        <select name="user_id" id="user_id" class="form-control" required>
+                                            <option value="">Pilih Guru BK</option>
+                                            @foreach ($users as $user)
+                                                <option value="{{$user->id}}">{{$user->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-12 mt-2">
+                                    <div class="form-group">
+                                        <label for="time_schedule">Keterangan</label>
+                                        <textarea name="ketarangan" class="form-control" id="ketarangan" placeholder="keterangan" rows="6"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+        @include('schedule.detail')
+    @else
+        <div class="container-fluid">
+            <div class="content-header">
+                <h1>Data Jadwal Konseling</h1>
+                @if (session('success'))
+                    <div class="alert alert-success mt-2 alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if (session('error'))
+                    <div class="alert alert-danger mt-2 alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+            </div>
+            <div class="col-md-12">
+                <div class="main-content">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-bordered" id="schedulesTable">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama Siswa</th>
+                                        <th>Tanggal</th>
+                                        <th>Jam</th>
+                                        <th>Guru BK</th>
+                                        <th>Keterangan</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach ($schedules as $item)
+                                    <tr>
+                                            <td>{{$loop->iteration}}</td>
+                                            <td>{{$item->student?->name}}</td>
+                                            <td>{{$item->schedule_date ? date('d-m-Y', strtotime($item->schedule_date)) : ''}}</td>
+                                            <td>{{$item->schedule_time}}</td>
+                                            <td>{{$item->teacher?->name}}</td>
+                                            <td>{{$item->description}}</td>
+                                            <td>
+                                                @if (strtolower($item->status) == 'disetujui')
+                                                    <span class="badge bg-success">Disetujui</span>
+                                                @elseif (strtolower($item->status) == 'pending')
+                                                    <span class="badge bg-warning text-dark">Pending</span>
+                                                @elseif (strtolower($item->status) == 'ditolak')
+                                                    <span class="badge bg-danger">Tolak</span>
+                                                @else
+                                                    <span class="badge bg-secondary">{{ $item->status }}</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if (strtolower($item->status) == 'pending')
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        Aksi
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="{{ route('schedule.approve', $item->id) }}">Approve</a></li>
+                                                        <li><a class="dropdown-item" href="{{ route('schedule.reject', $item->id) }}">Reject</a></li>
+                                                    </ul>
+                                                </div>
+                                                @endif
+                                            </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    @endif
 @endsection
 
 @push('scripts')
@@ -94,8 +173,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-
-
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
@@ -161,60 +240,11 @@
 
         calendar.render();
     });
+
+    $(document).ready(function() {
+        $('#schedulesTable').DataTable({});
+    });
 </script>
 @endpush
 
-<div class="mt-5">
-    @role('admin')
-    <h4 class="mb-3">Daftar Jadwal Konseling (Menunggu Persetujuan)</h4>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Nama Siswa</th>
-                <th>Tanggal</th>
-                <th>Jam</th>
-                <th>Guru BK</th>
-                <th>Keterangan</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($jadwals as $jadwal)
-                <tr>
-                    <td>{{ $jadwal->siswa->name ?? '-' }}</td>
-                    <td>{{ $jadwal->schedule_date }}</td>
-                    <td>{{ $jadwal->schedule_time }}</td>
-                    <td>{{ $jadwal->guru->name ?? '-' }}</td>
-                    <td>{{ $jadwal->keterangan }}</td>
-                    <td>
-                        @if ($jadwal->status == 'pending')
-                            <span class="badge bg-warning text-dark">Menunggu</span>
-                        @elseif ($jadwal->status == 'disetujui')
-                            <span class="badge bg-success">Disetujui</span>
-                        @else
-                            <span class="badge bg-danger">Ditolak</span>
-                        @endif
-                    </td>
-                    <td>
-                        @if ($jadwal->status == 'pending')
-                        <form action="{{ route('schedule.acc', $jadwal->id) }}" method="POST" class="d-inline">
-                            @csrf @method('PUT')
-                            <input type="hidden" name="status" value="disetujui">
-                            <button type="submit" class="btn btn-success btn-sm">ACC</button>
-                        </form>
-                        <form action="{{ route('schedule.acc', $jadwal->id) }}" method="POST" class="d-inline">
-                            @csrf @method('PUT')
-                            <input type="hidden" name="status" value="ditolak">
-                            <button type="submit" class="btn btn-danger btn-sm">Tolak</button>
-                        </form>
-                        @else
-                            <em>-</em>
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    @endrole
-</div>
+

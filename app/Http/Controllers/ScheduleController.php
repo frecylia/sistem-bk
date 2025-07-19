@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class ScheduleController extends Controller
 {
@@ -21,7 +21,9 @@ class ScheduleController extends Controller
             $q->where('name', 'Admin');
         })->get();  
 
-        return view('schedule.index', ['users' => $users]);
+        $schedules = Schedule::with(['student', 'teacher'])->where('user_id', Auth::user()->id)->get();
+
+        return view('schedule.index', ['users' => $users, 'schedules' => $schedules]);
     }
 
     /**
@@ -62,7 +64,6 @@ class ScheduleController extends Controller
     
             return redirect()->back()->with('success', 'Jadwal berhasil disimpan!');
         } catch (\Exception $e) {
-            dd($e);
             DB::rollBack();
             Log::error('Gagal menyimpan jadwal: ' . $e->getMessage());
     
@@ -87,6 +88,40 @@ class ScheduleController extends Controller
         });
 
         return response()->json($events);
+    }
+    
+    /**
+     * Approve a schedule
+     */
+    public function approve($id)
+    {
+        try {
+            $schedule = Schedule::findOrFail($id);
+            $schedule->status = 'disetujui';
+            $schedule->save();
+            
+            return redirect()->back()->with('success', 'Jadwal berhasil disetujui!');
+        } catch (\Exception $e) {
+            Log::error('Gagal menyetujui jadwal: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyetujui jadwal.');
+        }
+    }
+    
+    /**
+     * Reject a schedule
+     */
+    public function reject($id)
+    {
+        try {
+            $schedule = Schedule::findOrFail($id);
+            $schedule->status = 'ditolak';
+            $schedule->save();
+            
+            return redirect()->back()->with('success', 'Jadwal berhasil ditolak!');
+        } catch (\Exception $e) {
+            Log::error('Gagal menolak jadwal: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menolak jadwal.');
+        }
     }
 }
 

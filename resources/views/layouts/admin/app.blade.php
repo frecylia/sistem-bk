@@ -18,9 +18,7 @@
     <!-- Bootstrap CSS (dari CDN) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom CSS (tambahkan custom styles) -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
+    
     <!-- Optional: Add inline styles if needed -->
     <style>
         /* Custom styling */
@@ -32,11 +30,14 @@
 
         /* Navbar Styling */
         .navbar {
-            background-color: #3490dc;
             padding: 0.8rem 1rem;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             z-index: 1030;
             position: sticky;
+            background-color: #3490dc;
+            position: sticky;
+            top: 0;
+            transition: all 0.3s ease;
         }
 
         .navbar-brand, .nav-link {
@@ -195,6 +196,7 @@
             padding: 0.25rem 0.75rem;
         }
     </style>
+    @stack('styles')
 </head>
 <body>
     <div id="app">
@@ -253,33 +255,37 @@
                 
                 <div class="list-group">
                     @can('dashboard')
-                    <a href="{{route('dashboard')}}" class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active':''}}">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
-                    </a>
+                        <a href="{{route('dashboard')}}" class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active':''}}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
                     @endcan
                     @can('user-list')
-                    <a href="{{route('siswa.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('siswa.index') ? 'active':''}}">
-                        <i class="fas fa-users"></i> Siswa
-                    </a>
-                    <a href="{{route('guru.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('guru.index') ? 'active':''}}">
-                        <i class="fas fa-user-tie"></i> Guru BK
-                    </a>
+                        <a href="{{route('siswa.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('siswa.index') ? 'active':''}}">
+                            <i class="fas fa-users"></i> Siswa
+                        </a>
+                        <a href="{{route('guru.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('guru.index') ? 'active':''}}">
+                            <i class="fas fa-user-tie"></i> Guru BK
+                        </a>
                     @endcan
-                    @role('siswa')
-<a href="{{ route('minat-bakat.create') }}" class="list-group-item list-group-item-action {{ request()->routeIs('minat-bakat.create') ? 'active':'' }}">
-    <i class="fas fa-clipboard-list"></i> Formulir Tes
-</a>
-@endrole
-
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <i class="fas fa-user-tie"></i> Hasil Tes
-                    </a>
-                    <a href="{{route('schedule.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('schedule.index') ? 'active':''}}">
-                        <i class="fas fa-comments"></i>Jadwal Konseling
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <i class="fas fa-clipboard-list"></i> Laporan
-                    </a>
+                  
+                    @if (Auth::user()->hasRole('Siswa'))
+                        <a href="{{ route('minat-bakat.create') }}" class="list-group-item list-group-item-action {{ request()->routeIs('minat-bakat.create') ? 'active':'' }}">
+                            <i class="fas fa-clipboard-list"></i> Formulir Tes
+                        </a>
+                         <a href="{{route('schedule.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('schedule.index') ? 'active':''}}">
+                            <i class="fas fa-comments"></i> Jadwal Konseling
+                        </a>
+                    @else
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-user-tie"></i> Hasil Tes
+                        </a>
+                        <a href="{{route('schedule.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('schedule.index') ? 'active':''}}">
+                            <i class="fas fa-comments"></i>Data Konseling
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-clipboard-list"></i> Laporan
+                        </a>
+                    @endif
                 </div>
             </div>
 

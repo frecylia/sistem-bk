@@ -15,7 +15,7 @@ class Schedule extends Model
         'schedule_date',
         'schedule_time',
         'description',
-        'status' // kalau kamu pakai acc/disetujui/ditolak
+        'status'
     ];
 
     // Relasi ke siswa

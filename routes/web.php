@@ -7,6 +7,7 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\MinatBakatController;
+use App\Http\Controllers\HasilTesController;
 
 /*
 |---------------------------------------------------------------------------
@@ -30,11 +31,11 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('guru', GuruController::class);
     Route::resource('schedule', ScheduleController::class);
     Route::get('schedule-json', [ScheduleController::class, 'getSchedules'])->name('schedule.json');
+    Route::get('schedule/{id}/approve', [ScheduleController::class, 'approve'])->name('schedule.approve');
+    Route::get('schedule/{id}/reject', [ScheduleController::class, 'reject'])->name('schedule.reject');
     Route::get('/formulir-minat-bakat', [MinatBakatController::class, 'create'])->name('minat-bakat.create');
-    Route::get('/minat-bakat', [MinatBakatController::class, 'create'])->name('minat-bakat.create');
     Route::get('/hasil-tes', [HasilTesController::class, 'index'])->name('hasil.index');
-
-Route::post('/minat-bakat', [MinatBakatController::class, 'store'])->name('minat-bakat.store');
+    Route::post('/minat-bakat', [MinatBakatController::class, 'store'])->name('minat-bakat.store');
 });
 
 // // Halaman Welcome (default)
