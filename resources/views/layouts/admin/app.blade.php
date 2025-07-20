@@ -1,335 +1,383 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+	<title>{{ config('app.name', 'Laravel') }}</title>
+	<link rel="dns-prefetch" href="//fonts.bunny.net">
+	<link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">	
+	<style>
+		/* Custom styling */
+		body {
+			background-color: #f8f9fa;
+			font-family: 'Nunito', sans-serif;
+			overflow-x: hidden;
+		}
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+		/* Navbar Styling */
+		.navbar {
+			padding: 0.8rem 1rem;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			z-index: 1030;
+			position: sticky;
+			background-color: #3490dc;
+			position: sticky;
+			top: 0;
+			transition: all 0.3s ease;
+		}
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+		.navbar-brand, .nav-link {
+			color: white !important;
+		}
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+		.navbar-nav .nav-item .nav-link:hover {
+			color: #d1e7ff !important;
+		}
 
-    <!-- Bootstrap CSS (dari CDN) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		.dropdown-menu {
+			background-color: #fff;
+			box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+			border: none;
+		}
 
-    
-    <!-- Optional: Add inline styles if needed -->
-    <style>
-        /* Custom styling */
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Nunito', sans-serif;
-            overflow-x: hidden;
-        }
+		.dropdown-item {
+			color: #212529;
+		}
 
-        /* Navbar Styling */
-        .navbar {
-            padding: 0.8rem 1rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1030;
-            position: sticky;
-            background-color: #3490dc;
-            position: sticky;
-            top: 0;
-            transition: all 0.3s ease;
-        }
+		.dropdown-item:hover {
+			background-color: #e9ecef;
+		}
 
-        .navbar-brand, .nav-link {
-            color: white !important;
-        }
+		/* Sidebar Styling */
+		#sidebar-wrapper {
+				min-height: calc(100vh - 56px);
+				width: 250px;
+				background: #2c3e50;
+				color: #fff;
+				transition: all 0.3s;
+				position: fixed;
+				z-index: 999;
+				left: 0;
+				box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+		}
 
-        .navbar-nav .nav-item .nav-link:hover {
-            color: #d1e7ff !important;
-        }
+		#sidebar-wrapper.collapsed {
+				margin-left: -250px;
+		}
 
-        .dropdown-menu {
-            background-color: #fff;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-            border: none;
-        }
+		.sidebar-heading {
+				padding: 1rem 1.5rem;
+				font-size: 1.2rem;
+				font-weight: bold;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+				text-align: center;
+		}
 
-        .dropdown-item {
-            color: #212529;
-        }
+		.list-group {
+				padding: 0.5rem 0;
+		}
 
-        .dropdown-item:hover {
-            background-color: #e9ecef;
-        }
+		.list-group-item {
+				background: transparent;
+				color: #ddd;
+				border: none;
+				padding: 0.75rem 1.5rem;
+				transition: all 0.3s;
+				display: flex;
+				align-items: center;
+		}
 
-        /* Sidebar Styling */
-        #sidebar-wrapper {
-            min-height: calc(100vh - 56px);
-            width: 250px;
-            background: #2c3e50;
-            color: #fff;
-            transition: all 0.3s;
-            position: fixed;
-            z-index: 999;
-            left: 0;
-            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
-        }
+		.list-group-item i {
+				margin-right: 10px;
+				width: 20px;
+				text-align: center;
+		}
 
-        #sidebar-wrapper.collapsed {
-            margin-left: -250px;
-        }
+		.list-group-item:hover {
+				background: rgba(255, 255, 255, 0.1);
+				color: #fff;
+		}
 
-        .sidebar-heading {
-            padding: 1rem 1.5rem;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-        }
+		.list-group-item.active {
+				background-color: #3490dc;
+				border-color: #3490dc;
+		}
 
-        .list-group {
-            padding: 0.5rem 0;
-        }
+		/* Submenu styling */
+		#masterSubmenu {
+				background-color: #243342;
+		}
 
-        .list-group-item {
-            background: transparent;
-            color: #ddd;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-        }
+		#masterSubmenu .list-group-item {
+				padding-left: 3rem;
+				background-color: #243342;
+				font-size: 0.9rem;
+		}
 
-        .list-group-item i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
+		#masterSubmenu .list-group-item:hover,
+		#masterSubmenu .list-group-item.active {
+				background-color: #1e2b38;
+		}
 
-        .list-group-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-        }
+		/* Content area */
+		#page-content-wrapper {
+				width: 100%;
+				padding-left: 250px;
+				transition: all 0.3s;
+		}
 
-        .list-group-item.active {
-            background-color: #3490dc;
-            border-color: #3490dc;
-        }
+		#page-content-wrapper.expanded {
+				padding-left: 0;
+		}
 
-        /* Content area */
-        #page-content-wrapper {
-            width: 100%;
-            padding-left: 250px;
-            transition: all 0.3s;
-        }
+		/* For mobile view */
+		@media (max-width: 768px) {
+				#sidebar-wrapper {
+						margin-left: -250px;
+				}
+				
+				#sidebar-wrapper.active {
+						margin-left: 0;
+				}
+				
+				#page-content-wrapper {
+						padding-left: 0;
+				}
+				
+				#sidebarToggle {
+						display: block;
+				}
+		}
 
-        #page-content-wrapper.expanded {
-            padding-left: 0;
-        }
+		/* Page content styling */
+		.content-header {
+				padding: 1.5rem 0;
+				border-bottom: 1px solid #dee2e6;
+				margin-bottom: 2rem;
+		}
 
-        /* For mobile view */
-        @media (max-width: 768px) {
-            #sidebar-wrapper {
-                margin-left: -250px;
-            }
-            
-            #sidebar-wrapper.active {
-                margin-left: 0;
-            }
-            
-            #page-content-wrapper {
-                padding-left: 0;
-            }
-            
-            #sidebarToggle {
-                display: block;
-            }
-        }
+		.content-header h1 {
+				margin-bottom: 0;
+				font-size: 1.8rem;
+				font-weight: 600;
+				color: #333;
+		}
 
-        /* Page content styling */
-        .content-header {
-            padding: 1.5rem 0;
-            border-bottom: 1px solid #dee2e6;
-            margin-bottom: 2rem;
-        }
+		/* Dashboard cards */
+		.dashboard-card {
+				border-radius: 10px;
+				box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+				transition: transform 0.3s, box-shadow 0.3s;
+				margin-bottom: 1.5rem;
+				overflow: hidden;
+		}
 
-        .content-header h1 {
-            margin-bottom: 0;
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #333;
-        }
+		.dashboard-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+		}
 
-        /* Dashboard cards */
-        .dashboard-card {
-            border-radius: 10px;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            transition: transform 0.3s, box-shadow 0.3s;
-            margin-bottom: 1.5rem;
-            overflow: hidden;
-        }
+		.card-icon {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 60px;
+				height: 60px;
+				border-radius: 50%;
+				margin-bottom: 1rem;
+				font-size: 1.5rem;
+		}
 
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        }
-
-        .card-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-
-        /* Toggle button */
-        #sidebarToggle {
-            background-color: transparent;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0.25rem 0.75rem;
-        }
-    </style>
-    @stack('styles')
+		/* Toggle button */
+		#sidebarToggle {
+				background-color: transparent;
+				border: none;
+				color: white;
+				font-size: 1.2rem;
+				cursor: pointer;
+				padding: 0.25rem 0.75rem;
+		}
+	</style>
+	@stack('styles')
 </head>
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light shadow-sm">
-            <div class="container-fluid">
-                <button class="me-2" id="sidebarToggle">
-                    <i class="fas fa-bars text-white"></i>
-                </button>
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'SIMBK') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+	<div id="app">
+			<nav class="navbar navbar-expand-md navbar-light shadow-sm">
+					<div class="container-fluid">
+							<button class="me-2" id="sidebarToggle">
+									<i class="fas fa-bars text-white"></i>
+							</button>
+							<a class="navbar-brand" href="{{ url('/') }}">
+									{{ config('app.name', 'SIMBK') }}
+							</a>
+							<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+									<span class="navbar-toggler-icon"></span>
+							</button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto"></ul>
+							<div class="collapse navbar-collapse" id="navbarSupportedContent">
+									<!-- Left Side Of Navbar -->
+									<ul class="navbar-nav me-auto"></ul>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                <i class="fas fa-user-circle me-1"></i> {{ Auth::user()->name }}
-                            </a>
+									<!-- Right Side Of Navbar -->
+									<ul class="navbar-nav ms-auto">
+											
+											<li class="nav-item dropdown">
+													<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+															<i class="fas fa-user-circle me-1"></i> {{ Auth::user()->name }}
+													</a>
 
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-user me-2"></i> Profile
-                                </a>
-                        
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{{ route('logout') }}"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <i class="fas fa-sign-out-alt me-2"></i> {{ __('Logout') }}
-                                </a>
+													<div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+															<a class="dropdown-item" href="#">
+																	<i class="fas fa-user me-2"></i> Profile
+															</a>
+											
+															<div class="dropdown-divider"></div>
+															<a class="dropdown-item" href="{{ route('logout') }}"
+																	onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+																	<i class="fas fa-sign-out-alt me-2"></i> {{ __('Logout') }}
+															</a>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+															<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+																	@csrf
+															</form>
+													</div>
+											</li>
+									</ul>
+							</div>
+					</div>
+			</nav>
 
-        <div class="d-flex" id="wrapper">
-            <!-- Sidebar -->
-            <div id="sidebar-wrapper">
-                <div class="sidebar-heading">
-                    <img src="{{ asset('img/logo.jpg') }}" alt="Logo" class="img-fluid" style="max-height: 60px;">
-                    <div>Sistem BK</div>
-                </div>
-                
-                <div class="list-group">
-                    @can('dashboard')
-                        <a href="{{route('dashboard')}}" class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active':''}}">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                        </a>
-                    @endcan
-                    @can('user-list')
-                        <a href="{{route('siswa.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('siswa.index') ? 'active':''}}">
-                            <i class="fas fa-users"></i> Siswa
-                        </a>
-                        <a href="{{route('guru.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('guru.index') ? 'active':''}}">
-                            <i class="fas fa-user-tie"></i> Guru BK
-                        </a>
-                    @endcan
-                  
-                    @if (Auth::user()->hasRole('Siswa'))
-                        <a href="{{ route('minat-bakat.create') }}" class="list-group-item list-group-item-action {{ request()->routeIs('minat-bakat.create') ? 'active':'' }}">
-                            <i class="fas fa-clipboard-list"></i> Formulir Tes
-                        </a>
-                         <a href="{{route('schedule.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('schedule.index') ? 'active':''}}">
-                            <i class="fas fa-comments"></i> Jadwal Konseling
-                        </a>
-                    @else
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <i class="fas fa-user-tie"></i> Hasil Tes
-                        </a>
-                        <a href="{{route('schedule.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('schedule.index') ? 'active':''}}">
-                            <i class="fas fa-comments"></i>Data Konseling
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <i class="fas fa-clipboard-list"></i> Laporan
-                        </a>
-                    @endif
-                </div>
-            </div>
+			<div class="d-flex" id="wrapper">
+					<!-- Sidebar -->
+					<div id="sidebar-wrapper">
+							<div class="sidebar-heading">
+									<img src="{{ asset('img/logo.jpg') }}" alt="Logo" class="img-fluid" style="max-height: 60px;">
+									<div>Sistem BK</div>
+							</div>
+							
+							<div class="list-group">
+									@can('dashboard')
+											<a href="{{route('dashboard')}}" class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active':''}}">
+													<i class="fas fa-tachometer-alt"></i> Dashboard
+											</a>
+									@endcan
+									@can('user-list')
+											<a href="{{route('siswa.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('siswa.index') ? 'active':''}}">
+													<i class="fas fa-users"></i> Siswa
+											</a>
+											<a href="{{route('guru.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('guru.index') ? 'active':''}}">
+													<i class="fas fa-user-tie"></i> Guru BK
+											</a>
+									@endcan
 
-            <!-- Page Content -->
-            <div id="page-content-wrapper">
-                <main class="py-4">
-                    @yield('content')
-                   
-                </main>
-            </div>
-        </div>
-    </div>
+									@if (Auth::user()->hasRole('Admin'))
+										<!-- Master Data Menu -->
+										<a href="#masterSubmenu" data-bs-toggle="collapse" class="list-group-item list-group-item-action">
+													<i class="fas fa-database"></i> Master Data
+													<i class="fas fa-angle-down float-end mt-1"></i>
+											</a>
+											<div class="collapse" id="masterSubmenu">
+													<a href="{{ route('kategori-minat.index') }}" class="list-group-item list-group-item-action ps-4 {{ request()->routeIs('kategori-minat.index') ? 'active':''}}">
+															<i class="fas fa-tag"></i> Kategori Minat
+													</a>
+													<a href="{{ route('jurusan.index') }}" class="list-group-item list-group-item-action ps-4 {{ request()->routeIs('jurusan.index') ? 'active':''}}">
+															<i class="fas fa-graduation-cap"></i> Jurusan
+													</a>
+													<a href="{{ route('soal.index') }}" class="list-group-item list-group-item-action ps-4 {{ request()->routeIs('soal.index') ? 'active':''}}">
+															<i class="fas fa-question-circle"></i> Soal
+													</a>
+													<a href="{{ route('pilihan-jawaban.index') }}" class="list-group-item list-group-item-action ps-4 {{ request()->routeIs('pilihan-jawaban.index') ? 'active':''}}">
+															<i class="fas fa-list-ul"></i> Pilihan Jawaban
+													</a>
+											</div>
+									
+									@endif
+								
+									@if (Auth::user()->hasRole('Siswa'))
+											<a href="{{ route('minat-bakat.create') }}" class="list-group-item list-group-item-action {{ request()->routeIs('minat-bakat.create') ? 'active':'' }}">
+													<i class="fas fa-clipboard-list"></i> Formulir Tes
+											</a>
+												<a href="{{route('schedule.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('schedule.index') ? 'active':''}}">
+													<i class="fas fa-comments"></i> Jadwal Konseling
+											</a>
+									@else
+										<a href="#" class="list-group-item list-group-item-action">
+												<i class="fas fa-user-tie"></i> Hasil Tes
+										</a>
+										<a href="{{route('schedule.index')}}" class="list-group-item list-group-item-action {{ request()->routeIs('schedule.index') ? 'active':''}}">
+												<i class="fas fa-comments"></i>Data Konseling
+										</a>
+										<a href="#" class="list-group-item list-group-item-action">
+												<i class="fas fa-clipboard-list"></i> Laporan
+										</a>
+									@endif
+							</div>
+					</div>
 
-    <!-- Bootstrap JS (dari CDN) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Custom JS -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Toggle sidebar
-            document.getElementById('sidebarToggle').addEventListener('click', function() {
-                document.getElementById('sidebar-wrapper').classList.toggle('collapsed');
-                document.getElementById('page-content-wrapper').classList.toggle('expanded');
-            });
+					<!-- Page Content -->
+					<div id="page-content-wrapper">
+							<main class="py-4">
+									@yield('content')
+									
+							</main>
+					</div>
+			</div>
+	</div>
 
-            // Handle mobile view
-            if (window.innerWidth < 768) {
-                document.getElementById('sidebar-wrapper').classList.add('collapsed');
-                document.getElementById('page-content-wrapper').classList.add('expanded');
-            }
+	<!-- Bootstrap JS (dari CDN) -->
+			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+			<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
+			<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.7/index.global.min.js"></script>
+			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+			<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+			<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+			<script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+			<script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.js"></script>
+	
+	<!-- Custom JS -->
+	<script>
+			document.addEventListener('DOMContentLoaded', function() {
+					// Toggle sidebar
+					document.getElementById('sidebarToggle').addEventListener('click', function() {
+							document.getElementById('sidebar-wrapper').classList.toggle('collapsed');
+							document.getElementById('page-content-wrapper').classList.toggle('expanded');
+					});
 
-            // Resize handling
-            window.addEventListener('resize', function() {
-                if (window.innerWidth < 768) {
-                    document.getElementById('sidebar-wrapper').classList.add('collapsed');
-                    document.getElementById('page-content-wrapper').classList.add('expanded');
-                } else {
-                    document.getElementById('sidebar-wrapper').classList.remove('collapsed');
-                    document.getElementById('page-content-wrapper').classList.remove('expanded');
-                }
-            });
-        });
-    </script>
-    @stack('scripts')
+					// Handle mobile view
+					if (window.innerWidth < 768) {
+							document.getElementById('sidebar-wrapper').classList.add('collapsed');
+							document.getElementById('page-content-wrapper').classList.add('expanded');
+					}
+
+					// Resize handling
+					window.addEventListener('resize', function() {
+							if (window.innerWidth < 768) {
+									document.getElementById('sidebar-wrapper').classList.add('collapsed');
+									document.getElementById('page-content-wrapper').classList.add('expanded');
+							} else {
+									document.getElementById('sidebar-wrapper').classList.remove('collapsed');
+									document.getElementById('page-content-wrapper').classList.remove('expanded');
+							}
+					});
+					$(".number-only").keyup(function(e) {
+							var regex = /^[0-9]+$/;
+							if (regex.test(this.value) !== true) {
+									this.value = this.value.replace(/[^0-9]+/, '');
+							}
+					});
+					
+					// Auto-expand submenu if a child item is active
+					const activeSubmenuItem = document.querySelector('#masterSubmenu .list-group-item.active');
+					if (activeSubmenuItem) {
+							const masterSubmenu = document.getElementById('masterSubmenu');
+							masterSubmenu.classList.add('show');
+					}
+			});
+	</script>
+	@stack('scripts')
 </body>
-</html> 
+</html>
 

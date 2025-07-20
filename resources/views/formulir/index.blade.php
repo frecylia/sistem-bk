@@ -3,110 +3,171 @@
         <div class="container-fluid">
             <div class="col-md-12">
                 <div class="main-content">
-                    <form id="peminatan-form" action="" method="POST" class="bg-white p-4 rounded shadow-sm" novalidate>
+                    <form id="peminatan-form" action="{{route('minat-bakat.store')}}" method="POST" class="bg-white p-4 rounded shadow-sm" onsubmit="return confirm('Apakah Anda yakin ingin mengirim formulir ini?');">
                         @csrf
                         <div class="text-center mb-5">
                             <h1 class="text-primary">FORMULIR TES PEMINATAN KEJURUAN</h1>
                             <h2 class="text-secondary h3">MAN 1 Bandung</h2>
                             <p class="fw-bold">Tahun Ajaran 2025/2026</p>
                         </div>
+                        @if (Session::has('success'))
+                            <div class="alert alert-success d-flex align-items-center" role="alert">
+                                <i class="fa fa-check-circle me-2"></i>
+                                <div>
+                                    {{ Session::get('success') }}
+                                </div>
+                            </div>
+                        @endif
+                        @if (Session::has('error'))
+                            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                <i class="fa fa-exclamation-triangle me-2"></i>
+                                <div>
+                                    {{ Session::get('error') }}
+                                </div>
+                            </div>
+                        @endif
+                        
                         
                         <div class="card mb-4">
                             <div class="card-header bg-primary text-white"><h2 class="mb-0 h4">DATA PRIBADI</h2></div>
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label for="nama" class="form-label">Nama Lengkap:</label>
-                                    <input type="text" id="nama" name="nama" required value="{{ Auth::user()->name }}" class="form-control @error('nama') is-invalid @enderror">
-                                    @error('nama') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="nis" class="form-label">Nomor Induk Siswa:</label>
-                                    <input type="text" id="nis" name="nis" required value="{{ Auth::user()->nis }}" class="form-control @error('nis') is-invalid @enderror">
-                                    @error('nis') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="email" class="form-label">Email:</label>
-                                    <input type="email" id="email" name="email" required value="{{ Auth::user()->email }}" class="form-control @error('email') is-invalid @enderror">
-                                    @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="telepon" class="form-label">No. Telepon/HP:</label>
-                                    <input type="tel" id="telepon" name="telepon" required value="{{ old('telepon') }}" class="form-control @error('telepon') is-invalid @enderror">
-                                    @error('telepon') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="ttl" class="form-label">Tempat, Tanggal Lahir:</label>
-                                    <input type="date" id="ttl" name="ttl" required  class="form-control @error('ttl') is-invalid @enderror" placeholder="Contoh: Bandung, 17 Agustus 2009">
-                                    @error('ttl') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label class="form-label">Jenis Kelamin:</label>
-                                    <div class="radio-group">
-                                        <label><input type="radio" name="gender" value="laki-laki" required {{ old('gender') == 'laki-laki' ? 'checked' : '' }}> Laki-laki</label>
-                                        <label><input type="radio" name="gender" value="perempuan" {{ old('gender') == 'perempuan' ? 'checked' : '' }}> Perempuan</label>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label for="nama" class="form-label">Nama Lengkap:</label>
+                                            <input type="text" id="nama" name="nama" required value="{{ Auth::user()->name }}" class="form-control @error('nama') is-invalid @enderror">
+                                            @error('nama') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                        </div>
+                                        
                                     </div>
-                                    @error('gender') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label for="nis" class="form-label">Nomor Induk Siswa:</label>
+                                            <input type="text" id="nis" name="nis" required value="{{ Auth::user()->nis }}" class="form-control @error('nis') is-invalid @enderror" readonly>
+                                            @error('nis') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label for="email" class="form-label">Email:</label>
+                                            <input type="email" id="email" name="email" required value="{{ Auth::user()->email }}" class="form-control @error('email') is-invalid @enderror">
+                                            @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label for="telepon" class="form-label">No. Telepon/HP:</label>
+                                            <input type="text" id="no_telp" name="no_telp" required value="{{ Auth::user()->no_telp }}" placeholder="Masukan Nomor Handphone" class="form-control number-only @error('no_telp') is-invalid @enderror">
+                                            @error('no_telp') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label for="tanggal_lahir" class="form-label">Tanggal Lahir:</label>
+                                            <input type="date" id="tanggal_lahir" name="tanggal_lahir" required value="{{ Auth::user()->tanggal_lahir }}"  class="form-control @error('tanggal_lahir') is-invalid @enderror" placeholder="Contoh: Bandung, 17 Agustus 2009">
+                                            @error('tanggal_lahir') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                        </div>
+                                    </div>
+                                   <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="form-label">Jenis Kelamin:</label>
+                                            <div class="d-flex">
+                                                <div class="form-check me-3">
+                                                    <input class="form-check-input" type="radio" name="jenis_kelamin" id="laki_laki" value="Laki-Laki" required {{ Auth::user()->jenis_kelamin == 'Laki-Laki' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="laki_laki">
+                                                        Laki-laki
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="jenis_kelamin" id="perempuan" value="Perempuan" {{ Auth::user()->jenis_kelamin == 'Perempuan' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="perempuan">
+                                                        Perempuan
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            @error('jenis_kelamin') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label for="alamat" class="form-label">Alamat:</label>
+                                            <input type="text" id="alamat" name="alamat" required value="{{ Auth::user()->alamat }}" class="form-control @error('alamat') is-invalid @enderror" placeholder="Masukan Alamat">
+                                            @error('alamat') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                        </div>
+                                    </div>
                                 </div>
-                                
-                                <div class="form-group">
-                                    <label for="alamat" class="form-label">Alamat:</label>
-                                    <input type="text" id="alamat" name="alamat" required value="{{ old('alamat') }}" class="form-control @error('alamat') is-invalid @enderror">
-                                    @error('alamat') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                </div>
-                                
-                                
-                                
-                               
                             </div>
                         </div>
 
                         <div class="card mb-4">
-                            <div class="card-header bg-primary text-white"><h2 class="mb-0 h4">RIWAYAT PENDIDIKAN</h2></div>
+                            <div class="card-header bg-primary text-white"><h2 class="mb-0 h4">RIWAYAT PENDIDIKAN & PEMINATAN JURUSAN</h2></div>
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label for="asal_smp" class="form-label">Asal SMP:</label>
-                                    <input type="text" id="asal_smp" name="asal_smp" required value="{{ old('asal_smp') }}" class="form-control @error('asal_smp') is-invalid @enderror">
-                                    @error('asal_smp') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="nilai_rapor" class="form-label">Nilai Rata-rata Rapor Kelas 9:</label>
-                                    <input type="number" id="nilai_rapor" name="nilai_rapor" min="0" max="100" step="0.01" required value="{{ old('nilai_rapor') }}" class="form-control @error('nilai_rapor') is-invalid @enderror">
-                                    @error('nilai_rapor') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="prestasi" class="form-label">Prestasi Akademik/Non-Akademik:</label>
-                                    <textarea id="prestasi" name="prestasi" class="form-control @error('prestasi') is-invalid @enderror">{{ old('prestasi') }}</textarea>
-                                    @error('prestasi') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card mb-4">
-                            <div class="card-header bg-primary text-white"><h2 class="mb-0 h4">PEMINATAN JURUSAN</h2></div>
-                            <div class="card-body">
-                                <p class="alert alert-info"><em>Urutkan pilihan jurusan dari 1-3 sesuai minat Anda (1 = pilihan tertinggi). Peringkat tidak boleh sama.</em></p>
-                        
-                                <div class="jurusan-rank">
-                                    <label for="rank_ipa" class="form-label">Peringkat IPA (Ilmu Pengetahuan Alam)</label>
-                                    <input type="number" id="rank_ipa" name="rank_ipa" min="1" max="3" required value="{{ old('rank_ipa') }}" class="form-control @error('rank_ipa') is-invalid @enderror">
-                                    @error('rank_ipa') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                </div>
-                                
-                                <div class="jurusan-rank">
-                                    <label for="rank_ips" class="form-label">Peringkat IPS (Ilmu Pengetahuan Sosial)</label>
-                                    <input type="number" id="rank_ips" name="rank_ips" min="1" max="3" required value="{{ old('rank_ips') }}" class="form-control @error('rank_ips') is-invalid @enderror">
-                                    @error('rank_ips') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                </div>
-                                
-                                <div class="jurusan-rank">
-                                    <label for="rank_bahasa" class="form-label">Peringkat Bahasa</label>
-                                    <input type="number" id="rank_bahasa" name="rank_bahasa" min="1" max="3" required value="{{ old('rank_bahasa') }}" class="form-control @error('rank_bahasa') is-invalid @enderror">
-                                    @error('rank_bahasa') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <p class="alert alert-info"><em>Untuk Urutkan pilihan jurusan dari 1-3 sesuai minat Anda (1 = pilihan tertinggi). Peringkat tidak boleh sama.</em></p>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label for="asal_smp" class="form-label">Asal SMP:</label>
+                                                    <input type="text" id="asal_smp" name="asal_smp" required value="{{ old('asal_smp') }}" class="form-control @error('asal_smp') is-invalid @enderror" placeholder="Masukan Asal SMP">
+                                                    @error('asal_smp') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+                                        
+                                                <div class="form-group">
+                                                    <label for="nilai_rapor" class="form-label">Nilai Rata-rata Rapor Kelas 9:</label>
+                                                    <input type="number" id="nilai_rapor" name="nilai_rapor" min="0" max="100" step="0.01" required value="{{ old('nilai_rapor') }}" class="form-control @error('nilai_rapor') is-invalid @enderror" placeholder="Masukan Nilai Rata-rata Rapor Kelas 9">
+                                                    @error('nilai_rapor') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+                                         
+                                                <div class="form-group">
+                                                    <label for="prestasi" class="form-label">Prestasi Akademik/Non-Akademik:</label>
+                                                    <textarea id="prestasi" name="prestasi" class="form-control @error('prestasi') is-invalid @enderror" placeholder="Masukan Prestasi Akademik/Non-Akademik">{{ old('prestasi') }}</textarea>
+                                                    @error('prestasi') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label for="rank_ipa" class="form-label">Peringkat IPA (Ilmu Pengetahuan Alam)</label>
+                                                    <select id="rank_ipa" name="rank_ipa" min="1" max="3" required value="{{ old('rank_ipa') }}" class="form-control rank-select @error('rank_ipa') is-invalid @enderror">
+                                                        <option value="">Pilih Peringkat</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                    </select>
+                                                    @error('rank_ipa') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="rank_ips" class="form-label">Peringkat IPS (Ilmu Pengetahuan Sosial)</label>
+                                                    <select id="rank_ips" name="rank_ips" min="1" max="3" required value="{{ old('rank_ips') }}" class="form-control rank-select @error('rank_ips') is-invalid @enderror">
+                                                        <option value="">Pilih Peringkat</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                    </select>
+                                                    @error('rank_ips') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="rank_bahasa" class="form-label">Peringkat Bahasa</label>
+                                                    <select id="rank_bahasa" name="rank_bahasa" min="1" max="3" required value="{{ old('rank_bahasa') }}" class="form-control rank-select @error('rank_bahasa') is-invalid @enderror">
+                                                         <option value="">Pilih Peringkat</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                    </select>
+                                                    @error('rank_bahasa') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+                                                <div id="rank-error" class="text-danger mt-2 fw-bold" style="display: none;">
+                                                    <i class="fa fa-exclamation-triangle me-2"></i>Peringkat tidak boleh ada yang sama.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -141,32 +202,8 @@
                                 </div>
                                 </div>
                         </div>
-
-                        <div class="card mb-4">
-                            <div class="card-header bg-primary text-white"><h2 class="mb-0 h4">PERNYATAAN DAN TANDA TANGAN</h2></div>
-                            <div class="card-body">
-                                <p class="alert alert-secondary">Saya menyatakan bahwa informasi yang saya berikan dalam formulir ini adalah benar dan dapat dipertanggungjawabkan. Saya bersedia mengikuti proses peminatan jurusan sesuai dengan ketentuan yang berlaku di sekolah.</p>
-                        
-                                <div class="form-group">
-                                    <label for="tanggal" class="form-label">Tanggal:</label>
-                                    <input type="date" id="tanggal" name="tanggal" required value="{{ old('tanggal') ?? date('Y-m-d') }}" class="form-control @error('tanggal') is-invalid @enderror" style="max-width: 200px;">
-                                    @error('tanggal') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                </div>
-                        
-                                <div class="row mt-5 text-center">
-                                    <div class="col-md-6 mb-4">
-                                        <div class="signature-box border p-3 mb-2 mx-auto" style="max-width: 300px;"></div>
-                                        <p class="signature-label fw-bold">Tanda tangan siswa</p>
-                                    </div>
-                                    <div class="col-md-6 mb-4">
-                                        <div class="signature-box border p-3 mb-2 mx-auto" style="max-width: 300px;"></div>
-                                        <p class="signature-label fw-bold">Tanda tangan orang tua/wali</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        @auth
+                    
+                        {{-- @auth
                             @if(Auth::user()->role === 'admin')
                             <div class="card mb-4 border-danger">
                                 <div class="card-header bg-danger text-white"><h2 class="mb-0 h4">BAGIAN INI DIISI OLEH PETUGAS</h2></div>
@@ -199,10 +236,10 @@
                                 </div>
                             </div>
                             @endif
-                        @endauth
+                        @endauth --}}
                         
                         <div class="text-center mt-4 mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg px-5">Kirim Formulir</button>
+                            <button type="submit" class="btn btn-primary btn-lg px-5" id="submit-button">Kirim Formulir</button>
                         </div>
                     </form>
                 </div>
@@ -261,38 +298,39 @@
 @push('scripts')
 <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('peminatan-form');
-        const rankInputs = [
-            document.getElementById('rank_ipa'),
-            document.getElementById('rank_ips'),
-            document.getElementById('rank_bahasa')
-        ];
+    $(document).ready(function() {
+        validateRanks();
 
-        function validateRanking() {
-            // Ambil nilai yang tidak kosong
-            const ranks = rankInputs.map(input => input.value).filter(Boolean);
-            
-            // Validasi hanya jika ketiga input sudah terisi
-            if (ranks.length < 3) {
-                return true;
-            }
-            
-            // Cek apakah ada nilai duplikat
-            const uniqueRanks = new Set(ranks);
-            if (uniqueRanks.size !== ranks.length) {
-                alert('Peringkat jurusan harus unik (1, 2, dan 3). Tidak boleh ada peringkat yang sama.');
-                return false;
-            }
-            
-            return true;
-        }
-        
-        form.addEventListener('submit', function(e) {
-            if (!validateRanking()) {
-                e.preventDefault(); // Mencegah form dikirim jika validasi gagal
-            }
+        $('.rank-select').on('change', function() {
+            validateRanks();
         });
     });
+
+    function validateRanks() {
+        const selectedValues = [];
+        let isDuplicate = false;
+        
+        $('.rank-select').each(function() {
+            const value = $(this).val();
+            if (value !== '') {
+                selectedValues.push(value);
+            }
+        });
+
+        if (selectedValues.length > 1) {
+            const uniqueValues = new Set(selectedValues);
+            if (uniqueValues.size < selectedValues.length) {
+                isDuplicate = true;
+            }
+        }
+
+        if (isDuplicate) {
+            $('#rank-error').show();
+            $('#submit-button').prop('disabled', true); 
+        } else {
+            $('#rank-error').hide();
+            $('#submit-button').prop('disabled', false);
+        }
+    }
 </script>
 @endpush

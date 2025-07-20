@@ -8,6 +8,10 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\MinatBakatController;
 use App\Http\Controllers\HasilTesController;
+use App\Http\Controllers\KategoriMinatController;
+use App\Http\Controllers\JurusanController;
+use App\Http\Controllers\SoalController;
+use App\Http\Controllers\PilihanJawabanController;
 
 /*
 |---------------------------------------------------------------------------
@@ -21,9 +25,6 @@ use App\Http\Controllers\HasilTesController;
 Route::get('/', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('authenticate');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/minat-bakat', [MinatBakatController::class, 'create'])->name('minat-bakat.create');
-Route::post('/minat-bakat', [MinatBakatController::class, 'store'])->name('minat-bakat.store');
-
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -36,6 +37,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/formulir-minat-bakat', [MinatBakatController::class, 'create'])->name('minat-bakat.create');
     Route::get('/hasil-tes', [HasilTesController::class, 'index'])->name('hasil.index');
     Route::post('/minat-bakat', [MinatBakatController::class, 'store'])->name('minat-bakat.store');
+    
+    // Master Data Routes
+    Route::resource('kategori-minat', KategoriMinatController::class);
+    Route::resource('jurusan', JurusanController::class);
+    Route::resource('soal', SoalController::class);
+    Route::resource('pilihan-jawaban', PilihanJawabanController::class);
 });
 
 // // Halaman Welcome (default)

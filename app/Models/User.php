@@ -25,6 +25,10 @@ class User extends Authenticatable
         'nis',
         'kelas',
         'jurusan',
+        'tanggal_lahir',
+        'jenis_kelamin',
+        'alamat',
+        'no_telp',
     ];
 
     /**

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MinatBakatController extends Controller
 {
@@ -14,8 +16,34 @@ class MinatBakatController extends Controller
 
     public function store(Request $request)
     {
-        // Sementara hanya redirect balik
+        $this->validate($request, [
+            'nama' => 'required',
+            'nis' => 'required',
+            'email' => 'required',
+            'no_telp' => 'required',
+            'tanggal_lahir' => 'required',
+            'jenis_kelamin' => 'required',
+            'alamat' => 'required',
+        ]);
+        DB::beginTransaction();
+        try {
+            DB::table('users')->where('id', Auth::id())->update([
+                'name'=> $request->nama,
+                'nis'=> $request->nis,
+                'email'=> $request->email,
+                'no_telp'=> $request->no_telp,
+                'tanggal_lahir'=> $request->tanggal_lahir,
+                'jenis_kelamin'=> $request->jenis_kelamin,
+                'alamat'=> $request->alamat,
+            ]);
+            DB::commit();
         return back()->with('success', 'Formulir berhasil dikirim!');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', 'Formulir gagal dikirim, Error: ' . $th->getMessage());
+        }
+      
+      
     }
 
      public function form()
